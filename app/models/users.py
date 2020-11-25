@@ -1,17 +1,15 @@
 import os, hashlib, random, string, jwt, sqlite3
 
-
+from app.schemas.users import UserCreate, UserGet
 #import some schemas
 
 
-def get_random_string(length=12):
-    pass
+db_path = '../db.db'
 
-def hash_password(password: str, salt: str):
-    pass
 
 def get_user_by_id():
     pass
+    #with sqlite3.connect(db_path)
 
 def get_user_by_email():
     pass
