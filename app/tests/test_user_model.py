@@ -1,12 +1,12 @@
-from unittest import TestCase
 import sys
+import unittest
 
 sys.path.append('../')
 
 from app.models import users as user_model
 
 
-class TestUserModel(TestCase):
+class TestUserModel(unittest.TestCase):
     def test_create_user_and_get_user_by_id_email(self):
         user_json = {
             "id": 2,
@@ -28,3 +28,8 @@ class TestUserModel(TestCase):
         auth_token = user_model.create_token(id)
         self.assertTrue(isinstance(auth_token, bytes))
         self.assertTrue(isinstance(user_model.decode_token(auth_token) == id))
+
+
+
+if __name__ == '__main__':
+    unittest.main()
