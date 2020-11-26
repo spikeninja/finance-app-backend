@@ -1,11 +1,16 @@
 import os, hashlib, random, string, jwt, sqlite3
 
-from app.schemas.users import UserCreate, UserGet
+from schemas.users import UserCreate, UserGet, TokenBase
 from datetime import datetime, timedelta
 
 
 SECRET_KEY = os.getenv('SECRET_KEY', 'default_value')
 db_path = 'db.db'
+
+
+def validate_password(password:str, hashed_password:str):
+    p = hashlib.sha256(password.encode()).hexdigest()
+    return p == hashed_password
 
 
 def create_token(id: int):
@@ -65,6 +70,8 @@ def get_user_by_email(email: str):
             users WHERE email=?
         """, (email,))
         res = cur.fetchone()
+    if not res:
+        return None
     user_json = {
         "id": res[0],
         "name": res[1],
