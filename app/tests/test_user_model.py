@@ -1,7 +1,7 @@
 import sys
 import unittest
 
-sys.path.append('../')
+sys.path.append('.')
 
 from app.models import users as user_model
 
