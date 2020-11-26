@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
 
 from models import users as user_model
+from models.dependencies import get_current_user
 
 
 
@@ -31,6 +32,6 @@ def register(user: user_model.UserCreate):
 
 
 @router.get('/me', response_model=user_model.UserGet)
-def me(id: int):
+def me(id: int = Depends(get_current_user)):
     user = user_model.get_user_by_id(id)
     return user
