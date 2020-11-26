@@ -1,9 +1,9 @@
 create table users(
   id integer primary key,
   name varchar(255),
-  email varchar(255),
+  email varchar(255) unique,
   password varchar(300),
-  created_at datetime
+  created_at timestamp
 );
 
 create table budget(
@@ -18,7 +18,7 @@ create table expense(
   description text,
   amount float,
   category varchar(255),
-  created_at datetime,
+  created_at timestamp,
   budget_id integer,
   FOREIGN KEY(budget_id) REFERENCES budget(id)
 );
@@ -28,8 +28,7 @@ create table income(
   description text,
   amount float,
   category varchar(255),
-  created_at datetime,
+  created_at timestamp,
   budget_id integer,
   FOREIGN KEY(budget_id) REFERENCES budget(id)
 );
-
