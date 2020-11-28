@@ -3,7 +3,7 @@ import unittest
 
 sys.path.append('.')
 
-from app.models import users as user_model
+from models import users as user_model
 
 
 class TestUserModel(unittest.TestCase):
