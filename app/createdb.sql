@@ -9,6 +9,8 @@ create table users(
 create table budget(
   id integer primary key,
   name varchar(255),
+  amount float,
+  created_at timestamp,
   user_id integer,
   FOREIGN KEY(user_id) REFERENCES users(id)
 );
