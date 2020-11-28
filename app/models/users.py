@@ -1,6 +1,6 @@
 import os, hashlib, random, string, jwt, sqlite3
 
-from schemas.users import UserCreate, UserGet, TokenBase
+from schemas.users import UserCreate, UserGet, TokenBase, UserDetailGet
 from datetime import datetime, timedelta
 
 
@@ -66,7 +66,7 @@ def get_user_by_email(email: str):
     with sqlite3.connect(db_path) as con:
         cur = con.cursor()
         cur.execute("""
-            SELECT id, name FROM
+            SELECT id, name, password FROM
             users WHERE email=?
         """, (email,))
         res = cur.fetchone()
@@ -75,9 +75,10 @@ def get_user_by_email(email: str):
     user_json = {
         "id": res[0],
         "name": res[1],
-        "email": email
+        "email": email,
+        "password": res[2]
     }
-    user = UserGet(**user_json)
+    user = UserDetailGet(**user_json)
     return user
 
 
