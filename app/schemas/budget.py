@@ -5,7 +5,6 @@ from pydantic import BaseModel
 class BudgetCreate(BaseModel):
     name: str
     amount: float
-    user_id: int
 
 class BudgetGet(BaseModel):
     id: int

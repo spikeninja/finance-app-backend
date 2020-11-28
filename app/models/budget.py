@@ -23,7 +23,7 @@ def create_budget(budget: BudgetCreate, user_id: int):
         (budget.name, budget.amount, datetime.now(), user_id))
         con.commit()
         id = cur.lastrowid
-    return id
+    return budget
 
 
 def get_all_budgets(user_id: int):
@@ -35,7 +35,7 @@ def get_all_budgets(user_id: int):
         """, (user_id,))
         rows = cur.fetchall()
     if rows == []:
-        return None
+        return rows
     res = []
     for e in rows:
         row_json = {
@@ -47,14 +47,14 @@ def get_all_budgets(user_id: int):
         res.append(BudgetGet(**row_json))
     return res
 
-
-def get_budget_by_id(budget_id: int):
+# do we need to check user_id?
+def get_budget_by_id(budget_id: int, user_id: int):
     with sqlite3.connect(db_path) as con:
         cur = con.cursor()
         cur.execute("""
         SELECT name, amount, created_at FROM
-        budget WHERE id=?
-        """, (budget_id,))
+        budget WHERE id=? AND user_id=?
+        """, (budget_id,user_id))
         row = cur.fetchone()
     if not row:
         return None
@@ -67,22 +67,22 @@ def get_budget_by_id(budget_id: int):
     return BudgetGet(**row_json)
 
 
-def edit_budget(budget: BudgetEdit, budget_id: int):
+def edit_budget(budget: BudgetEdit, budget_id: int, user_id: int):
     with sqlite3.connect(db_path) as con:
         cur = con.cursor()
         cur.execute("""
         UPDATE budget SET
-        name=?, amount=? WHERE id=?
-        """, (budget.name, budget.amount, budget_id))
+        name=?, amount=? WHERE id=? AND user_id=?
+        """, (budget.name, budget.amount, budget_id, user_id))
         con.commit()
     return budget
 
 
-def delete_budget_by_id(budget_id: int):
+def delete_budget_by_id(budget_id: int, user_id: int):
     with sqlite3.connect(db_path) as con:
         cur = con.cursor()
         cur.execute("""
-        DELETE FROM budget WHERE id=?
-        """, (budget_id,))
+        DELETE FROM budget WHERE id=? AND user_id=?
+        """, (budget_id,user_id))
         con.commit()
     return budget_id
