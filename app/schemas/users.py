@@ -12,5 +12,8 @@ class UserGet(BaseModel):
     name: str
     email: str
 
+class UserDetailGet(UserGet):
+    password: str
+
 class TokenBase(BaseModel):
     token: str

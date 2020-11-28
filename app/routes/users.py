@@ -17,8 +17,8 @@ def auth(form_data: OAuth2PasswordRequestForm = Depends()):
         raise HTTPException(status_code=400, detail="Incorrect credentials.")
     if not user_model.validate_password(form_data.password, user.password):
         raise HTTPException(status_code=400, detail="Incorrect credentials.")
-    token = users_model.create_token(user.id)
-    return users_model.TokenBase(token=token)
+    token = user_model.create_token(user.id)
+    return user_model.TokenBase(token=token)
 
 
 @router.post('/register', response_model=user_model.TokenBase)
