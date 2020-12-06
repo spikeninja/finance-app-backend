@@ -10,26 +10,30 @@ def create_income(income: IncomeCreate, budget_id: int):
         cur = con.cursor()
         cur.execute("""
         INSERT INTO income (id, description, amount,
-        category, created_at) values(NULL,?,?,?,?)
+        category, created_at, budget_id) values(NULL,?,?,?,?,?)
         """, (income.description, income.amount, income.category,
-        datetime.now()))
+        datetime.now(),budget_id))
         con.commit()
     return income
 
 
-def get_income_by_id(income_id: int):
+def get_income_by_id(income_id: int, budget_id: int):
     with sqlite3.connect(db_path) as con:
         cur = con.cursor()
         cur.execute("""
-        SELECT description, amount, category FROM income
-         WHERE id=?
-        """, (income_id, ))
+        SELECT description, amount, category, created_at FROM income
+         WHERE id=? AND budget_id=?
+        """, (income_id, budget_id))
         row = cur.fetchone()
+    if not row:
+        return None
     income = IncomeGet(
-        id=id,
+        id=income_id,
         description=row[0],
         amount=row[1],
-        category=row[2])
+        category=row[2],
+        created_at=row[3],
+        )
     return income
 
 
@@ -37,7 +41,7 @@ def get_all_incomes(budget_id: int):
     with sqlite3.connect(db_path) as con:
         cur = con.cursor()
         cur.execute("""
-        SELECT id, description, amount, category FROM income
+        SELECT id, description, amount, category, created_at FROM income
         WHERE budget_id=?
         """, (budget_id, ))
         rows = cur.fetchall()
@@ -49,18 +53,19 @@ def get_all_incomes(budget_id: int):
         id=row[0],
         description=row[1],
         amount=row[2],
-        category=row[3]
+        category=row[3],
+        created_at=row[4]
         ))
     return res
 
 
-def get_incomes_in_period(start_date: datetime, end_date: datetime = datetime.now()):
+def get_incomes_in_period(budget_id: int, start_date: datetime, end_date: datetime):
     with sqlite3.connect(db_path) as con:
         cur = con.cursor()
         cur.execute("""
         SELECT id, description, amount, category, created_at FROM income
-        WHERE created_at > ? AND created_at < ?
-        """, (start_date, end_date))
+        WHERE created_at > ? AND created_at < ? AND budget_id=?
+        """, (start_date, end_date, budget_id))
         rows = cur.fetchall()
     if rows == []:
         return rows
@@ -76,23 +81,23 @@ def get_incomes_in_period(start_date: datetime, end_date: datetime = datetime.no
     return res
 
 
-def edit_income(income: IncomeCreate, income_id: int):
+def edit_income(income: IncomeCreate, income_id: int, budget_id: int):
     with sqlite3.connect(db_path) as con:
         cur = con.cursor()
         cur.execute("""
         UPDATE income SET description=?, amount=?,
-        category=? WHERE id=?
+        category=? WHERE id=? AND budget_id=?
         """, (income.description, income.amount, income.category,
-        income_id))
+        income_id, budget_id))
         con.commit()
     return income
 
 
-def delete_income(income_id: int):
+def delete_income(income_id: int, budget_id: int):
     with sqlite3.connect(db_path) as con:
         cur = con.cursor()
         cur.execute("""
-        DELETE FROM income WHERE id=?
-        """, (income_id,))
+        DELETE FROM income WHERE id=? AND budget_id=?
+        """, (income_id, budget_id))
         con.commit()
     return income_id

@@ -8,7 +8,6 @@ from models.dependencies import get_current_user
 
 router = APIRouter()
 
-#def auth(form_data: OAuth2PasswordRequestForm = Depends()):
 
 @router.post('/auth', response_model=user_model.TokenBase)
 def auth(form_data: OAuth2PasswordRequestForm = Depends()):
