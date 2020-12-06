@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from datetime import datetime
 
 
 class ExpenseCreate(BaseModel):
@@ -6,7 +7,7 @@ class ExpenseCreate(BaseModel):
     amount: float
     category: str
 
-class IncomeGet(BaseModel):
+class ExpenseGet(BaseModel):
     id: int
     description: str
     amount: float

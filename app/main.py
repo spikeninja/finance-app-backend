@@ -4,6 +4,7 @@ from fastapi import FastAPI
 from routes.users import router as users_router
 from routes.budgets import router as budgets_router
 from routes.incomes import router as incomes_router
+from routes.expenses import router as expenses_router
 
 
 app = FastAPI()
@@ -15,6 +16,8 @@ app.include_router(budgets_router,
                    prefix='/budgets')
 app.include_router(incomes_router,
                    prefix='/incomes')
+app.include_router(expenses_router,
+                   prefix='/expenses')
 
 
 if __name__ == "__main__":
